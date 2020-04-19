@@ -12,17 +12,16 @@ Consul-backed cluster in a Vagrant and VirtualBox based environment. See
 
 ## Requirements
 
-This role requires FreeBSD, or a Debian or RHEL based Linux distribution. It
+This role requires a Debian or Ubuntu based Linux distribution. It
 might work with other software versions, but does work with the following
 specific software and versions:
 
 * Ansible: 2.8.4
-* Vault: 1.3.2
+* Vault: 1.4.0
 * Debian
   - Debian 10 (buster)
   - Debian 9 (stretch)
   - Debian 8 (jessie)
-* FreeBSD 11
 * Ubuntu 18.04
 
 Sorry, there is no planned support at the moment for Windows.
@@ -35,34 +34,19 @@ The role defines variables in `defaults/main.yml`:
 
 - version to install
   - Can be overridden with `VAULT_VERSION` environment variable
-  - Will include "+prem" if vault_enterprise_premium=True
-  - Will include ".hsm" if vault_enterprise_premium_hsm=True
 
-- Default value: 1.3.2
-
-### `vault_enterprise`
-
-- Set this to true when installing Vault Enterprise; this is not currently
-  possible as a "remote only" install method
-  - Can be overridden with `VAULT_ENTERPRISE` environment variable
-- Default value: *false*
+- Default value: 1.4.0
 
 ### `vault_pkg`
 
 - package filename
 - Default value: `"vault_{{ vault_version }}_linux_amd64.zip"`
 
-### `vault_enterprise_pkg`
-
-- package filename
-- Default value: `"vault-enterprise_{{ vault_version }}_{{ vault_os }}_{{ vault_architecture }}.zip"`
-
 ### `vault_zip_url`
 
 - Package download URL
 - Default value: `"https://releases.hashicorp.com/vault/{{ vault_version }}/vault_{{ vault_version }}_linux_amd64.zip"`
 - Override this var if you have your zip hosted internally
-- Works for enterprise installs also
 
 ### `vault_checksum_file_url`
 
@@ -75,11 +59,6 @@ The role defines variables in `defaults/main.yml`:
 - SHA summaries filename (included for convenience not for modification)
 - Default value: `"vault_{{ vault_version }}_SHA256SUMS"`
 
-### `vault_enterprise_shasums`
-
-- SHA summaries filename (included for convenience not for modification)
-- Will attempt to download from `vault_checksum_file_url` if not present in files/
-- Default value: `"vault-enterprise_{{ vault_version }}_SHA256SUMS"`
 
 ### `vault_bin_path`
 
@@ -154,8 +133,8 @@ The role defines variables in `defaults/main.yml`:
 ## Storage Backend Variables
 
 ### `vault_backend`
-- Which storage backend should be selected, choices are: consul, etcd, file, s3, and dynamodb
-- Default value: consul
+- Which storage backend should be selected, choices are: consul, etcd, gcs, file, s3, and dynamodb
+- Default value: gcs
 
 ### `vault_backend_tls_src_files`
 
@@ -694,28 +673,6 @@ example playbook for a file based  vault instance.
 
 ```
 
-## Vault Enterprise
-
-The role can install Vault Enterprise based instances.
-
-Place the Vault Enterprise zip archive into `{{ role_path }}/files` and set
-`vault_enterprise: true` or use the `VAULT_ENTERPRISE="true"` environment
-variable. Attempts to download the package from `vault_zip_url` if zip is not found in files/.
-
-### `vault_enterprise_premium`
-
-- Set to True if using premium binary. Basically just includes "+prem" in "vault_version" var
-- Default value: *False*
-
-## Vault Enterprise with HSM
-
-The role can configure HSM based instances. Make sure to reference the [HSM support page](https://www.vaultproject.io/docs/configuration/seal/index.html) and take notice of the [behavior changes](https://www.vaultproject.io/docs/enterprise/hsm/behavior.html#initialization) after HSM is installed.
-
-### `vault_enterprise_premium_hsm`
-
-- Set to True if using premium hsm binary. Basically just includes ".hsm" in "vault_version" var
-- Default value: false
-
 ### `vault_hsm_app`
 
 - Set which cryptography app to use.
@@ -773,7 +730,7 @@ The role can configure HSM based instances. Make sure to reference the [HSM supp
 
 This feature enables operators to delegate the unsealing process to Google Key Management System Cloud to ease operations in the event of partial failure and to aid in the creation of new or ephemeral clusters.
 
-This Auto-unseal mechanism is Open Source in Vault 1.0 but would require Enterprise binaries for any earlier version.
+This Auto-unseal mechanism is Open Source in Vault 1.0.
 
 ### `vault_gkms`
 

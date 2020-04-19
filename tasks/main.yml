@@ -54,24 +54,15 @@
   set_fact:
     installation_required: "{{ vault_installation is failed or installed_vault_version.stdout != vault_version }}"
 
-- name: Install OS packages and Vault Enterprise via control host
-  include: install_enterprise.yml
-  when:
-    - vault_enterprise | bool
-    - not vault_install_remotely | bool
-    - installation_required | bool
-
 - name: Install OS packages and Vault via control host
   include: install.yml
   when:
-    - not vault_enterprise | bool
     - not vault_install_remotely | bool
     - installation_required | bool
 
 - name: Install OS packages and Vault via remote hosts
   include: install_remote.yml
   when:
-    - not vault_enterprise | bool
     - vault_install_remotely | bool
     - installation_required | bool
 
@@ -137,41 +128,24 @@
     mode: "0400"
   notify: Restart vault
 
-
-- name: BSD init script
+- name: Vault gcs backend environment file
+  become: true
+  copy:
+    dest: "{{ vault_gcs_service_account_path }}"
+    content: '{{ vault_gcs_service_account_base64 | b64decode }}'
+  when: vault_backend == "gcs"
+  
+- name: Vault gcs backend environment file
+  become: true
   template:
-    src: "{{ vault_bsdinit_template }}"
-    dest: /etc/rc.d/vault
-    owner: root
-    group: wheel
-    mode: "0755"
-  when: ansible_os_family == "FreeBSD"
-
-- name: SYSV init script
-  template:
-    src: "{{ vault_sysvinit_template }}"
-    dest: /etc/init.d/vault
-    owner: root
-    group: root
-    mode: "0755"
-  when:
-    - not ansible_service_mgr == "systemd"
-    - not ansible_os_family == "Debian"
-    - not ansible_os_family == "FreeBSD"
-    - not ansible_os_family == "Solaris"
-
-- name: Debian init script
-  template:
-    src: "{{ vault_debian_init_template }}"
-    dest: /etc/init.d/vault
+    src: "{{ vault_gcs_access_env_file_template }}"
+    dest: "{{ vault_gcs_access_env_file }}"
+    force: yes
     owner: root
     group: root
-    mode: "0755"
-  when:
-    - not ansible_service_mgr == "systemd"
-    - ansible_os_family == "Debian"
-    - not ansible_os_family == "FreeBSD"
-    - not ansible_os_family == "Solaris"
+    mode: "0644"
+  notify: Restart vault
+  when: vault_backend == "gcs"
 
 - name: extract systemd version
   shell: |
@@ -184,8 +158,6 @@
   register: systemd_version
   when:
     - ansible_service_mgr == "systemd"
-    - not ansible_os_family == "FreeBSD"
-    - not ansible_os_family == "Solaris"
   tags: skip_ansible_lint
 
 - name: systemd unit
@@ -200,8 +172,6 @@
   register: systemd_unit
   when:
     - ansible_service_mgr == "systemd"
-    - not ansible_os_family == "FreeBSD"
-    - not ansible_os_family == "Solaris"
     - systemd_version is defined
 
 - name: reload systemd
@@ -210,8 +180,6 @@
     daemon-reload: true
   when:
     - ansible_service_mgr == "systemd"
-    - not ansible_os_family == "FreeBSD"
-    - not ansible_os_family == "Solaris"
     - systemd_version is defined
     - systemd_unit is changed
 

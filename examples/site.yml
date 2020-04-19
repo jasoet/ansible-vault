@@ -7,4 +7,4 @@
   become: true
   become_user: root
   roles:
-    - {role: brianshumate.vault, vault_backend: file}
+    - {role: /home/jasoet/Documents/Ansible/ansible-vault, vault_backend: gcs}

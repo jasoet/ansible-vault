@@ -6,9 +6,11 @@
 
 ANSIBLE_PLAYBOOK = ENV['ANSIBLE_PLAYBOOK'] || "site.yml"
 BOX_MEM = ENV['BOX_MEM'] || "2048"
-BOX_NAME =  ENV['BOX_NAME'] || "debian/buster64"
+BOX_NAME = ENV['BOX_NAME'] || "ubuntu/bionic64"
 VAULT_HOSTS = ENV['VAULT_HOSTS'] || "vagrant_hosts"
 LOGLEVEL = ENV['VAULT_LOGLEVEL'] || "info"
+GCS_SERVICE_ACCOUNT_BASE64 = ENV['GOOGLE_SERVICE_ACCOUNT_BASE64']
+GCS_BUCKET_NAME = ENV['GCS_BUCKET_NAME']
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.require_version ">= 1.5.0"
@@ -33,7 +35,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       ansible.inventory_path = VAULT_HOSTS
       # Extra Ansible variables can be defined here
       ansible.extra_vars = {
-        vault_log_level: LOGLEVEL
+          vault_log_level: LOGLEVEL,
+          vault_gcs_bucket: GCS_BUCKET_NAME,
+          vault_gcs_ha_enabled: true,
+          vault_gcs_service_account_base64: GCS_SERVICE_ACCOUNT_BASE64
       }
       ansible.playbook = ANSIBLE_PLAYBOOK
       ansible.limit = "all"
