@@ -6,18 +6,6 @@
 #     Do not modify the labels (text appearing between []), however
 
 [vault_instances]
-10.1.42.240 ansible_ssh_user=vagrant ansible_ssh_private_key_file=./.vagrant/machines/vault1/virtualbox/private_key
-#10.1.42.241 ansible_ssh_user=vagrant ansible_ssh_private_key_file=./.vagrant/machines/vault2/virtualbox/private_key
-#10.1.42.242 ansible_ssh_user=vagrant ansible_ssh_private_key_file=./.vagrant/machines/vault2/virtualbox/private_key
-
-[consul_nodes]
-
-# If you want to install Vault using Consul VMs deployed with the
-# brianshumate.consul role, replace all instances of ~/ansible_roles
-# below with your actual Ansible role path and uncomment:
-
-# consul1.local ansible_ssh_user=vagrant ansible_ssh_private_key_file=~/ansible_roles/brianshumate.consul/examples/.vagrant/machines/consul1/virtualbox/private_key
-
-# consul2.local ansible_ssh_user=vagrant ansible_ssh_private_key_file=~/ansible_roles/brianshumate.consul/examples/.vagrant/machines/consul2/virtualbox/private_key
-
-# consul3.local ansible_ssh_user=vagrant ansible_ssh_private_key_file=~/ansible_roles/brianshumate.consul/examples/.vagrant/machines/consul3/virtualbox/private_key
+10.1.42.241 ansible_ssh_user=vagrant ansible_ssh_private_key_file=./.vagrant/machines/vault1/virtualbox/private_key vault_cluster_address=10.1.42.241:8201 vault_redirect_address=10.1.42.241
+10.1.42.242 ansible_ssh_user=vagrant ansible_ssh_private_key_file=./.vagrant/machines/vault2/virtualbox/private_key vault_cluster_address=10.1.42.242:8201 vault_redirect_address=10.1.42.242
+10.1.42.243 ansible_ssh_user=vagrant ansible_ssh_private_key_file=./.vagrant/machines/vault3/virtualbox/private_key vault_cluster_address=10.1.42.243:8201 vault_redirect_address=10.1.42.243

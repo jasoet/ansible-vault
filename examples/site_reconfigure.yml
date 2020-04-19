@@ -12,5 +12,8 @@
         name: /home/jasoet/Documents/Ansible/ansible-vault
         tasks_from: reconfigure
       vars:
+        vault_address: 0.0.0.0
         vault_install_remotely: false
         vault_backend: gcs
+        vault_gcs_bucket: "{{ lookup('env','GCS_BUCKET_NAME') }}"
+        vault_gcs_service_account_base64:  "{{ lookup('env','GCS_SERVICE_ACCOUNT_BASE64') }}"
