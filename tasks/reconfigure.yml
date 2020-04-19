@@ -1,0 +1,6 @@
+- name: Reconfigure Vault
+  import_tasks: provision/configure.yml
+  notify: Restart vault
+
+  
+

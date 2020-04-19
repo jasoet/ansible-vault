@@ -10,7 +10,7 @@
     - name: Execute Role
       import_role:
         name: /home/jasoet/Documents/Ansible/ansible-vault
-        tasks_from: provision
+        tasks_from: reconfigure
       vars:
         vault_install_remotely: false
-        vault_backend: file
+        vault_backend: gcs

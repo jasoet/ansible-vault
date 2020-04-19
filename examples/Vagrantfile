@@ -4,7 +4,7 @@
 # Vagrantfile for bootstrapping a development Vault cluster with
 # VirtualBox provider and Ansible provisioner
 
-ANSIBLE_PLAYBOOK = ENV['ANSIBLE_PLAYBOOK'] || "site.yml"
+ANSIBLE_PLAYBOOK = ENV['ANSIBLE_PLAYBOOK'] || "site_reconfigure.yml"
 BOX_MEM = ENV['BOX_MEM'] || "2048"
 BOX_NAME = ENV['BOX_NAME'] || "ubuntu/bionic64"
 VAULT_HOSTS = ENV['VAULT_HOSTS'] || "vagrant_hosts"
