@@ -6,7 +6,7 @@
 # ---------------------------------------------------------------------------
 
 # Package variables
-vault_version: "{{ lookup('env','VAULT_VERSION') | default('1.4.0', true) }}{{'+prem' if vault_enterprise_premium else '' }}{{'.hsm' if vault_enterprise_premium_hsm else '' }}"
+vault_version: "{{ lookup('env','VAULT_VERSION') | default('1.4.0', true) }}"
 vault_architecture_map:
   amd64: amd64
   x86_64: amd64
@@ -20,7 +20,7 @@ vault_zip_url: "https://releases.hashicorp.com/vault/{{ vault_version }}/vault_{
 vault_checksum_file_url: "https://releases.hashicorp.com/vault/{{ vault_version }}/vault_{{ vault_version}}_SHA256SUMS"
 
 # Install method variables
-vault_install_remotely: false
+vault_install_remotely: true
 
 # Paths
 vault_bin_path: /usr/local/bin
@@ -213,11 +213,6 @@ vault_gkms_region: 'global'
 vault_gkms_key_ring: 'vault'
 vault_gkms_crypto_key: 'vault_key'
 
-# pkcs11 seal
-vault_enterprise_premium_hsm: false
-# WARNING: the following variable is deprecated as this section will become
-#          _only_ a pkcs11 seal soon. Please take note that vault_hsm_app will
-#          soon be removed!
 vault_hsm_app: pkcs11
 vault_backend_seal: vault_seal_pkcs11.j2
 vault_seal_lib: /lib64/hsmlibrary.so
