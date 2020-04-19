@@ -1,0 +1,82 @@
+- name: TLS configuration
+  include: tls.yml
+  when: vault_tls_disable == 0
+
+- name: Backend storage TLS configuration
+  include: backend_tls.yml
+  when: vault_tls_gossip == 1
+
+- name: "Copy over GCP Credentials for Auto Unseal"
+  copy:
+    src: "{{ vault_gkms_credentials_src_file }}"
+    dest: "{{ vault_gkms_credentials }}"
+    owner: "{{ vault_user }}"
+    group: "{{ vault_group }}"
+    mode: "0600"
+  when: vault_gkms | bool
+
+- name: Vault main configuration
+  become: true
+  template:
+    src: "{{ vault_main_configuration_template }}"
+    dest: "{{ vault_main_config }}"
+    owner: "{{ vault_user }}"
+    group: "{{ vault_group }}"
+    mode: "0400"
+  notify: Restart vault
+
+- name: Vault gcs backend environment file
+  become: true
+  copy:
+    dest: "{{ vault_gcs_service_account_path }}"
+    content: '{{ vault_gcs_service_account_base64 | b64decode }}'
+  when: vault_backend == "gcs"
+
+- name: Vault gcs backend environment file
+  become: true
+  template:
+    src: "{{ vault_gcs_access_env_file_template }}"
+    dest: "{{ vault_gcs_access_env_file }}"
+    force: yes
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart vault
+  when: vault_backend == "gcs"
+
+- name: extract systemd version
+  shell: |
+    set -o pipefail
+    systemctl --version systemd | head -n 1 | cut -d' ' -f2
+  args:
+    executable: /bin/bash
+  changed_when: false
+  check_mode: false
+  register: systemd_version
+  when:
+    - ansible_service_mgr == "systemd"
+  tags: skip_ansible_lint
+
+- name: systemd unit
+  become: true
+  template:
+    src: "{{ vault_systemd_template }}"
+    dest: /lib/systemd/system/vault.service
+    force: yes
+    owner: root
+    group: root
+    mode: "0644"
+  register: systemd_unit
+  when:
+    - ansible_service_mgr == "systemd"
+    - systemd_version is defined
+
+- name: reload systemd
+  become: true
+  systemd:
+    daemon-reload: true
+  when:
+    - ansible_service_mgr == "systemd"
+    - systemd_version is defined
+    - systemd_unit is changed
+
