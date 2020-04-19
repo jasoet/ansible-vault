@@ -1,4 +1,17 @@
+## v3.0.0
+This is a fork version from original https://github.com/ansible-community/ansible-vault. With major changes.
+- This version intended only for internal usage, will not publish into ansible-galaxy.
+- Remove support for RedHat OS Family and FreeBSD. Now only support Debian and Ubuntu with Systemd init.
+- Add support for gcs backend storage
+- Authentication for GCS uses `GOOGLE_APPLICATION_CREDENTIALS` env variable.
+- `main.yml` task no longer available, separated into `provision.yaml` and `reconfigure.yaml`
+- Default vault version is `1.4.0`
+
 ## v2.5.3
+- Add Prometheus telemetry support (thanks @bbayszczak)
+- Add tag check_vault to to Vault status debug task (thanks @NorthFuture)
+- Fixed indentation of vault config file (thanks @rasta-rocket)
+- Add RHEL 8 support (thanks @kwevers)
 - Add Prometheus telemetry support (thanks @bbayszczak)
 - Add tag check_vault to to Vault status debug task (thanks @NorthFuture)
 - Fixed indentation of vault config file (thanks @rasta-rocket)

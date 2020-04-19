@@ -24,26 +24,6 @@ The Ansible playbooks then further refine OS configuration, perform Vault softwa
 
 The result is a single Vault server using the [Filesystem Storage Backend](https://www.vaultproject.io/docs/configuration/storage/filesystem.html) that is ready to be initialized and unsealed from either the host system or within the virtual machine itself.
 
-## Designed for Ansible Galaxy
-
-This role is designed to be installed via the `ansible-galaxy` command instead of being directly run from the git repository.
-
-You should install it like this:
-
-```
-$ ansible-galaxy install brianshumate.vault
-```
-
-You'll want to make sure you have write access to `/etc/ansible/roles/` since
-that is where the role will be installed by default, or define your own
-Ansible role path by creating a `$HOME/.ansible.cfg` file with these contents:
-
-```
-[defaults]
-roles_path = PATH_TO_ROLES
-```
-
-Change `PATH_TO_ROLES` to a directory that you have write access to.
 
 ## Quick Start
 
