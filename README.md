@@ -3,8 +3,13 @@
 This Ansible role performs a basic [Vault](https://vaultproject.io/)
 installation, including filesystem structure and example configuration.
 
-It can also bootstrap a minimal development or evaluation server or HA
-[README_VAGRANT.md](https://github.com/brianshumate/ansible-vault/blob/master/examples/README_VAGRANT.md) and the associated [Vagrantfile](https://github.com/brianshumate/ansible-vault/blob/master/examples/Vagrantfile) for more details about the developer mode setup.
+This is a fork version from original https://github.com/ansible-community/ansible-vault. With major changes see [Changelog](CHANGELOG.md).
+- This version intended only for internal usage, will not publish into ansible-galaxy.
+- Remove support for RedHat OS Family and FreeBSD. Now only support Debian and Ubuntu with Systemd init.
+- Add support for gcs backend storage
+- Authentication for GCS uses `GOOGLE_APPLICATION_CREDENTIALS` env variable.
+- `main.yml` task no longer available, separated into `provision.yaml` and `reconfigure.yaml`
+- Default vault version is `1.4.0`
 
 ## Requirements
 
