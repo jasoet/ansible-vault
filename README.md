@@ -25,7 +25,17 @@ specific software and versions:
   - Debian 8 (jessie)
 * Ubuntu 18.04
 
-Sorry, there is no planned support at the moment for Windows.
+## Detail on this Version of Ansible Role
+This Ansible Role supports GCS as Vault storage backend. To use GCS as storage backend you need to set `vault_backend` to `gcs` and add following configs.
+```yaml
+vault_gcs_bucket: "" #GCS Bucket name (Mandatory)
+vault_gcs_ha_enabled: true # Enable HA (default true)
+# As default Ansible will lookup GOOGLE_APPLICATION_CREDENTIALS environment variable, copy the GCP *.json config into remote location (target vm) and use it as GCS Auth.
+vault_gcs_service_account_path: "{{ lookup('env', 'GOOGLE_APPLICATION_CREDENTIALS') }}" 
+vault_gcs_chunk_size: "" # (Optional) See https://www.vaultproject.io/docs/configuration/storage/google-cloud-storage for details 
+vault_gcs_max_parallel: "" # (Optional) See https://www.vaultproject.io/docs/configuration/storage/google-cloud-storage for details
+```
+
 
 ## Role Variables
 
@@ -135,7 +145,7 @@ The role defines variables in `defaults/main.yml`:
 
 ### `vault_backend`
 - Which storage backend should be selected, choices are: consul, etcd, gcs, file, s3, and dynamodb
-- Default value: gcs
+- Default value: file
 
 ### `vault_backend_tls_src_files`
 

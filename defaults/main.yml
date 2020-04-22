@@ -110,8 +110,9 @@ vault_gcs_bucket: "vault_gcs_backend"
 vault_gcs_ha_enabled: true
 vault_gcs_chunk_size: ""
 vault_gcs_max_parallel: ""
-vault_gcs_service_account_base64: "e30K"
-vault_gcs_service_account_path: "{{ vault_config_path }}/gcs_backend_service_account.json"
+# As default Ansible will lookup GOOGLE_APPLICATION_CREDENTIALS environment variable, copy the GCP *.json config into remote location (target vm) and use it as GCS Auth.
+vault_gcs_service_account_path: "{{ lookup('env', 'GOOGLE_APPLICATION_CREDENTIALS') }}"
+vault_gcs_service_account_remote_path: "{{ vault_config_path }}/gcs_backend_service_account.json"
 vault_gcs_access_env_file: "{{ vault_config_path }}/gcs_backend_env_file.conf"
 vault_gcs_access_env_file_template: vault_backend_gcs_env_file.j2
 

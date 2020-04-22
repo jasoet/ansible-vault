@@ -28,8 +28,8 @@
 - name: Vault gcs backend environment file
   become: true
   copy:
-    dest: "{{ vault_gcs_service_account_path }}"
-    content: '{{ vault_gcs_service_account_base64 | b64decode }}'
+    dest: "{{ vault_gcs_service_account_remote_path }}"
+    src: "{{ vault_gcs_service_account_path }}"
   when: vault_backend == "gcs"
 
 - name: Vault gcs backend environment file
